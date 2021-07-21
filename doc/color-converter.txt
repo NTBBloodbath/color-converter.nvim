@@ -1,0 +1,88 @@
+*color-converter.txt* Easily convert your CSS colors without leaving your favorite editor.
+
+ NTBBloodbath                                                 *color-converter*
+
+===============================================================================
+CONTENTS                                             *color-converter-contents*
+    1. Introduction.....................................|color-converter-intro|
+    2. Features......................................|color-converter-features|
+    3. Quick start................................|color-converter-quick-start|
+    4. Usage............................................|color-converter-usage|
+        1. Commands............................|color-converter-usage-commands|
+    5. Contributing..............................|color-converter-contributing|
+    6. License........................................|color-converter-license|
+
+
+===============================================================================
+INTRODUCTION                                            *color-converter-intro*
+
+Easily convert your CSS colors without leaving your favorite editor.
+
+
+===============================================================================
+FEATURES                                             *color-converter-features*
+
+- Cycle between HEX, RGB and HSL or directly convert to one of them,
+  e.g. from RGB to HEX.
+
+- No external dependencies!
+
+===============================================================================
+USAGE                                                   *color-converter-usage*
+
+Just configure the commands, place the cursor over the line
+containing the CSS color and trigger the command that you want.
+
+See |color-converter-usage-commands|
+
+
+===============================================================================
+COMMANDS                                       *color-converter-usage-commands*
+
+- `<Plug>ColorConvertCycle`
+  Cycle between `HEX`, `RGB` and `HSL`.
+
+- `<Plug>ColorConvertHEX`
+  Convert the current color to `HEX`.
+
+- `<Plug>ColorConvertRGB`
+  Convert the current color to `RGB`.
+
+- `<Plug>ColorConvertHSL`
+  Convert the current color to `HSL`.
+
+
+===============================================================================
+CONTRIBUTING                                     *color-converter-contributing*
+
+    1. Fork it (`github.com/NTBBloodbath/color-converter.nvim/fork`)
+    2. Create your feature branch (`git checkout -b my-new-feature`)
+    3. Commit your changes (`git commit -am 'Add some feature'`)
+    4. Push to the branch (`git push origin my-new-feature`)
+    5. Create a new Pull Request
+
+
+===============================================================================
+LICENSE                                               *color-converter-license*
+
+rest.nvim is distributed under MIT License.
+
+Copyright (c) 2021 NTBBloodbath
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
