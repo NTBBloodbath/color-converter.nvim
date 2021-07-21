@@ -59,7 +59,8 @@ yourself. These commands are the following:
 
 ## Todo
 
-- [ ] Support RGBA and HSLA
+- [x] Support RGBA and HSLA
+- [ ] Proper support for HEX with Alpha field (`#RRGGBBAA`)
 
 ## License
 
