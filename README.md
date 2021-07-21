@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/github/license/NTBBloodbath/doom-one.nvim?style=flat-square)
 ![Neovim version](https://img.shields.io/badge/Neovim-0.5-57A143?style=flat-square&logo=neovim)
 
-[![asciicast](https://asciinema.org/a/3QAPJfwVCy3f3i7AxAIIo0zdJ.svg)](https://asciinema.org/a/3QAPJfwVCy3f3i7AxAIIo0zdJ)
+<img width="600" src="./assets/demo.svg" />
 
 [Features](#features) • [Install](#install) • [Usage](#usage) • [Contribute](#contribute)
 
