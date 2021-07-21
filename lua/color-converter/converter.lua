@@ -18,34 +18,48 @@ M.Hex_to_RGB = function(color)
 	color = color:gsub('#', '')
 
 	if color:len() == 3 then
-	    -- #RGB
-	    return {
-	        tonumber('0x' .. color:gsub(1, 1)) * 17,
-	        tonumber('0x' .. color:gsub(2, 2)) * 17,
-	        tonumber('0x' .. color:gsub(3, 3)) * 17
-	    }
+		-- #RGB
+		local r = tonumber('0x' .. color:sub(1, 1))
+		local g = tonumber('0x' .. color:sub(2, 2))
+		local b = tonumber('0x' .. color:sub(3, 3))
+
+		return {
+			16 * r + r,
+			16 * g + g,
+			16 * b + b,
+		}
 	elseif color:len() == 4 then
-	    -- #RGBA
-	    return {
-	        tonumber('0x' .. color:gsub(1, 2)),
-	        tonumber('0x' .. color:gsub(3, 4)),
-	    }
+		-- #RGBA
+		local r = tonumber('0x' .. color:sub(1, 1))
+		local g = tonumber('0x' .. color:sub(2, 2))
+		local b = tonumber('0x' .. color:sub(3, 3))
+		local a = tonumber('0x' .. color:sub(4, 4))
+
+		return {
+			16 * r + r,
+			16 * g + g,
+			16 * b + b,
+			utils.round_float((16 * a + a) / 255, 2),
+		}
 	elseif color:len() == 6 then
-	    -- #RRGGBB
-	    return {
-		    tonumber('0x' .. string.sub(color, 1, 2)),
-		    tonumber('0x' .. string.sub(color, 3, 4)),
-		    tonumber('0x' .. string.sub(color, 5, 6)),
-	    }
+		-- #RRGGBB
+		return {
+			tonumber('0x' .. color:sub(1, 2)),
+			tonumber('0x' .. color:sub(3, 4)),
+			tonumber('0x' .. color:sub(5, 6)),
+		}
 	elseif color:len() == 8 then
-	    -- NOTE: unused at the moment
-	    -- #RRGGBBAA
-	    return {
-            tonumber('0x' .. string.sub(color, 1, 2)),
-		    tonumber('0x' .. string.sub(color, 3, 4)),
-		    tonumber('0x' .. string.sub(color, 5, 6)),
-		    tonumber('0x' .. string.sub(color, 7, 8)) / 255,
-	    }
+		-- NOTE: unused at the moment
+		-- #RRGGBBAA
+		return {
+			tonumber('0x' .. color:sub(1, 2)),
+			tonumber('0x' .. color:sub(3, 4)),
+			tonumber('0x' .. color:sub(5, 6)),
+			utils.round_float(
+				tonumber('0x' .. string.sub(color, 7, 8)) / 255,
+				2
+			),
+		}
 	end
 end
 
@@ -71,11 +85,13 @@ local function Hue_to_RGB(p, q, t)
 end
 
 -- Convert HSL to RGB color.
-M.HSL_to_RGB = function(h, s, l)
+M.HSL_to_RGB = function(h, s, l, a)
+	-- H [0,360]
+	-- S, L, A [0,1]
 	h = h / 360
 	s = s / 100
 	l = l / 100
-	local a = l
+	a = a and a / 100 or l
 	local r, g, b
 
 	-- achromatic
@@ -95,7 +111,7 @@ M.HSL_to_RGB = function(h, s, l)
 		math.floor(r * 255 + 0.5),
 		math.floor(g * 255 + 0.5),
 		math.floor(b * 255 + 0.5),
-		math.floor(a * 100 + 0.5),
+		a,
 	}
 end
 
@@ -104,9 +120,12 @@ end
 -- @param g Green value
 -- @param b Blue value
 M.RGB_to_HSL = function(r, g, b, a)
+	-- R, G, B [0,255]
+	-- A [0,1]
 	r = r / 255
 	g = g / 255
 	b = b / 255
+	a = a and a or 0
 
 	local c_max = math.max(r, g, b)
 	local c_min = math.min(r, g, b)
@@ -143,7 +162,13 @@ end
 
 M.Hex_to_HSL = function(color)
 	local rgb = M.Hex_to_RGB(color)
-	return M.RGB_to_HSL(rgb[1], rgb[2], rgb[3])
+
+	-- Check for the alpha field
+	if #rgb == 3 then
+		return M.RGB_to_HSL(rgb[1], rgb[2], rgb[3])
+	elseif #rgb == 4 then
+		return M.RGB_to_HSL(rgb[1], rgb[2], rgb[3], rgb[4])
+	end
 end
 
 M.HSL_to_Hex = function(h, s, l)
