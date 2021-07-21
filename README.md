@@ -5,10 +5,10 @@
 ![License](https://img.shields.io/github/license/NTBBloodbath/doom-one.nvim?style=flat-square)
 ![Neovim version](https://img.shields.io/badge/Neovim-0.5-57A143?style=flat-square&logo=neovim)
 
-<img width="600" src="./assets/demo.svg" />
-
 [Features](#features) • [Install](#install) • [Usage](#usage) • [Contribute](#contribute)
 
+<img width="800" src="./assets/demo.svg" />
+  
 </div>
 
 Easily convert your CSS colors without leaving your favorite editor.
