@@ -61,6 +61,7 @@ yourself. These commands are the following:
 
 - [x] Support RGBA and HSLA
 - [ ] Proper support for HEX with Alpha field (`#RRGGBBAA`)
+- [ ] Add a command to select the conversion in a floating window
 
 ## License
 
