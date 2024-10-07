@@ -1,5 +1,11 @@
 local converter = require('color-converter.converter')
-
+local function round(num)
+    if num % 1 >= 0.5 then
+        return math.ceil(num)
+    else
+        return math.floor(num)
+    end
+end
 local M = {}
 
 -- {{{ Some local DRY utilities
@@ -89,63 +95,65 @@ local function from_HSL_to_Hex(color_line)
 end
 
 local function from_RGB_to_HSL(color_line)
-	local rgb_colors = {}
-	local is_rgba = false
+    local rgb_colors = {}
+    local is_rgba = false
 
-	-- Try to detect RGB before RGBA
-	local rgb = color_line:gmatch('rgb%(%d+%%?,%s?%d+%%?,%s?%d+%%?%)')()
-	if not rgb then
-		rgb = color_line:gmatch('rgba%(%d+%%?,%s?%d+%%?,%s?%d+%%?,%s?[.%d]+%)')()
-		is_rgba = true
-	end
+    -- Try to detect RGB before RGBA
+    local rgb = color_line:gmatch('rgb%(%d+%%?,%s?%d+%%?,%s?%d+%%?%)')()
+    if not rgb then
+        rgb = color_line:gmatch('rgba%(%d+%%?,%s?%d+%%?,%s?%d+%%?,%s?[.%d]+%)')()
+        is_rgba = true
+    end
 
-	-- Remove the "rgb(" / "rgba(", ");" and leave only the numbers before
-	-- splitting the string
-	for _, color_part in ipairs(
-		vim.split(
-			is_rgba and rgb:gsub('rgba%(', ''):gsub('%);?', '')
-				or rgb:gsub('rgb%(', ''):gsub('%);?', ''),
-			','
-		)
-	) do
-		rgb_colors[#rgb_colors + 1] = tonumber(color_part)
-	end
-	local hsl_color
-	if is_rgba then
-		hsl_color = converter.RGB_to_HSL(
-			rgb_colors[1],
-			rgb_colors[2],
-			rgb_colors[3],
-			rgb_colors[4]
-		)
-		vim.cmd(
-			string.format(
-				's/%s/hsla(%d, %g%%, %g%%, %g)',
-				rgb,
-				hsl_color[1],
-				hsl_color[2],
-				hsl_color[3],
-				hsl_color[4]
-			)
-		)
-	else
-		hsl_color = converter.RGB_to_HSL(
-			rgb_colors[1],
-			rgb_colors[2],
-			rgb_colors[3]
-		)
-		vim.cmd(
-			string.format(
-				's/%s/hsl(%d, %g%%, %g%%)',
-				rgb,
-				hsl_color[1],
-				hsl_color[2],
-				hsl_color[3]
-			)
-		)
-	end
+    -- Remove the "rgb(" / "rgba(", ");" and leave only the numbers before
+    -- splitting the string
+    for _, color_part in ipairs(
+        vim.split(
+            is_rgba and rgb:gsub('rgba%(', ''):gsub('%);?', '')
+                or rgb:gsub('rgb%(', ''):gsub('%);?', ''),
+            ','
+        )
+    ) do
+        rgb_colors[#rgb_colors + 1] = tonumber(color_part)
+    end
+
+    local hsl_color
+    if is_rgba then
+        hsl_color = converter.RGB_to_HSL(
+            rgb_colors[1],
+            rgb_colors[2],
+            rgb_colors[3],
+            rgb_colors[4]
+        )
+        -- Apply rounding to saturation and lightness values
+        vim.cmd(
+            string.format(
+                's/%s/hsla(%d, %d%%, %d%%, %g)',
+                rgb,
+                round(hsl_color[1]),
+                round(hsl_color[2]),
+                round(hsl_color[3]),
+                hsl_color[4]
+            )
+        )
+    else
+        hsl_color = converter.RGB_to_HSL(
+            rgb_colors[1],
+            rgb_colors[2],
+            rgb_colors[3]
+        )
+        -- Apply rounding to saturation and lightness values
+        vim.cmd(
+            string.format(
+                's/%s/hsl(%d, %d%%, %d%%)',
+                rgb,
+                round(hsl_color[1]),
+                round(hsl_color[2]),
+                round(hsl_color[3])
+            )
+        )
+    end
 end
-
 local function from_RGB_to_Hex(color_line)
 	local rgb_colors = {}
 	local is_rgba = false
