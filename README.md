@@ -23,6 +23,15 @@ Easily convert your CSS colors without leaving your favorite editor.
 Packer
 ```lua
 use 'NTBBloodbath/color-converter.nvim'
+require('color-converter').setup({})
+```
+
+Lazy
+```lua
+return {
+  "NTBBloodbath/color-converter.nvim",
+  opts = {},
+}
 ```
 
 ## Usage
@@ -44,6 +53,21 @@ yourself. These commands are the following:
   - Convert the current color to `RGB`.
 - `<Plug>ColorConvertHSL`
   - Convert the current color to `HSL`.
+
+### Configuration
+  This is the default configuration:
+
+```lua
+{
+  hsl_pattern = "hsl(%d, %g%%, %g%%)",
+  hsla_pattern = "hsla(%d, %d%%, %d%%, %g)",
+  rgb_pattern = "rgb(%d, %d, %d)",
+  rgba_pattern = "rgba(%d, %d, %d, %g)",
+}
+```
+
+You can update the patterns to use modern syntax without the comma separator, ie.
+`hsl_pattern = "hsl(%d %g%% %g%%)"`
 
 ## Acknowledgements
 
