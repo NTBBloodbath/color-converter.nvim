@@ -15,16 +15,16 @@ local function from_HSL_to_RGB(color_line)
 	local is_hsla = false
 
 	-- Try to detect HSL before HSLA
-	local hsl = color_line:gmatch('hsl%(%d+,%s?[.%d]+%%?,%s?[.%d]+%%?%)')()
+	local hsl = color_line:gmatch('hsl%(%d+,?%s?[.%d]+%%?,?%s?[.%d]+%%?%)')()
 	if not hsl then
-		hsl = color_line:gmatch('hsla%(%d+,%s?[.%d]+%%?,%s?[.%d]+%%?,%s?[.%d]+%)')()
+		hsl = color_line:gmatch('hsla%(%d+,?%s?[.%d]+%%?,?%s?[.%d]+%%?,?%s?[.%d]+%)')()
 		is_hsla = true
 	end
 
 	-- Remove the "hsl(", ");", "%" and leave only the numbers before
 	-- splitting the string
 	for _, color_part in ipairs(
-		vim.split(is_hsla and hsl:gsub('hsla%(', ''):gsub('%);?', ''):gsub('%%', '') or hsl:gsub('hsl%(', ''):gsub('%);?', ''):gsub('%%', ''), ',')
+		vim.split(is_hsla and hsl:gsub('hsla%(', ''):gsub('%);?', ''):gsub('%%', '') or hsl:gsub('hsl%(', ''):gsub('%);?', ''):gsub('%%', ''), '[, ]')
 	) do
 		hsl_colors[#hsl_colors + 1] = tonumber(color_part)
 	end
@@ -38,7 +38,7 @@ local function from_HSL_to_RGB(color_line)
 		)
 		vim.cmd(
 			string.format(
-				's/%s/rgba(%d, %d, %d, %g)',
+				's/%s/' .. require('config').options.rgba_pattern,
 				hsl,
 				rgb_colors[1],
 				rgb_colors[2],
@@ -54,7 +54,7 @@ local function from_HSL_to_RGB(color_line)
 		)
 		vim.cmd(
 			string.format(
-				's/%s/rgb(%d, %d, %d)',
+				's/%s/' .. require('config').options.rgb_pattern,
 				hsl,
 				rgb_colors[1],
 				rgb_colors[2],
@@ -69,9 +69,9 @@ local function from_HSL_to_Hex(color_line)
 	local is_hsla = false
 
 	-- Try to detect HSL before HSLA
-	local hsl = color_line:gmatch('hsl%(%d+,%s?[.%d]+%%?,%s?[.%d]+%%?%)')()
+	local hsl = color_line:gmatch('hsl%(%d+,?%s?[.%d]+%%?,?%s?[.%d]+%%?%)')()
 	if not hsl then
-		hsl = color_line:gmatch('hsla%(%d+,%s?[.%d]+%%?,%s?[.%d]+%%?,%s?[.%d]+%)')()
+		hsl = color_line:gmatch('hsla%(%d+,?%s?[.%d]+%%?,?%s?[.%d]+%%?,?%s?[.%d]+%)')()
 		is_hsla = true
 	end
 
@@ -81,7 +81,7 @@ local function from_HSL_to_Hex(color_line)
 		vim.split(
 			is_hsla and hsl:gsub('hsla%(', ''):gsub('%);?', ''):gsub('%%', '')
 				or hsl:gsub('hsl%(', ''):gsub('%);?', ''):gsub('%%', ''),
-			','
+            '[, ]'
 		)
 	) do
 		hsl_colors[#hsl_colors + 1] = tonumber(color_part)
@@ -99,9 +99,9 @@ local function from_RGB_to_HSL(color_line)
     local is_rgba = false
 
     -- Try to detect RGB before RGBA
-    local rgb = color_line:gmatch('rgb%(%d+%%?,%s?%d+%%?,%s?%d+%%?%)')()
+    local rgb = color_line:gmatch('rgb%(%d+%%?,?%s?%d+%%?,?%s?%d+%%?%)')()
     if not rgb then
-        rgb = color_line:gmatch('rgba%(%d+%%?,%s?%d+%%?,%s?%d+%%?,%s?[.%d]+%)')()
+        rgb = color_line:gmatch('rgba%(%d+%%?,?%s?%d+%%?,?%s?%d+%%?,?%s?[.%d]+%)')()
         is_rgba = true
     end
 
@@ -111,7 +111,7 @@ local function from_RGB_to_HSL(color_line)
         vim.split(
             is_rgba and rgb:gsub('rgba%(', ''):gsub('%);?', '')
                 or rgb:gsub('rgb%(', ''):gsub('%);?', ''),
-            ','
+           '[, ]'
         )
     ) do
         rgb_colors[#rgb_colors + 1] = tonumber(color_part)
@@ -128,7 +128,7 @@ local function from_RGB_to_HSL(color_line)
         -- Apply rounding to saturation and lightness values
         vim.cmd(
             string.format(
-                's/%s/hsla(%d, %d%%, %d%%, %g)',
+                's/%s/' .. require('config').options.hsla_pattern,
                 rgb,
                 round(hsl_color[1]),
                 round(hsl_color[2]),
@@ -145,7 +145,7 @@ local function from_RGB_to_HSL(color_line)
         -- Apply rounding to saturation and lightness values
         vim.cmd(
             string.format(
-                's/%s/hsl(%d, %d%%, %d%%)',
+                's/%s/' .. require('config').options.hsl_pattern,
                 rgb,
                 round(hsl_color[1]),
                 round(hsl_color[2]),
@@ -159,9 +159,9 @@ local function from_RGB_to_Hex(color_line)
 	local is_rgba = false
 
 	-- Try to detect RGB before RGBA
-	local rgb = color_line:gmatch('rgb%(%d+%%?,%s?%d+%%?,%s?%d+%%?%)')()
+	local rgb = color_line:gmatch('rgb%(%d+%%?,?%s?%d+%%?,?%s?%d+%%?%)')()
 	if not rgb then
-		rgb = color_line:gmatch('rgba%(%d+%%?,%s?%d+%%?,%s?%d+%%?,%s?[.%d]+%)')()
+		rgb = color_line:gmatch('rgba%(%d+%%?,?%s?%d+%%?,?%s?%d+%%?,?%s?[.%d]+%)')()
 		is_rgba = true
 	end
 	-- Remove the "rgb(", ");" and leave only the numbers before
@@ -170,7 +170,7 @@ local function from_RGB_to_Hex(color_line)
 		vim.split(
 			is_rgba and rgb:gsub('rgba%(', ''):gsub('%);?', '')
 				or rgb:gsub('rgb%(', ''):gsub('%);?', ''),
-			','
+			'[, ]'
 		)
 	) do
 		rgb_colors[#rgb_colors + 1] = tonumber(color_part)
@@ -191,7 +191,7 @@ local function from_Hex_to_HSL(color_line)
 	local hsl_color = converter.Hex_to_HSL(hex)
 	vim.cmd(
 		string.format(
-			's/%s/hsl(%d, %g%%, %g%%)',
+			's/%s/' .. require('config').options.hsl_pattern,
 			hex,
 			hsl_color[1],
 			hsl_color[2],
@@ -208,7 +208,7 @@ local function from_Hex_to_RGB(color_line)
 	local rgb_color = converter.Hex_to_RGB(hex)
 	vim.cmd(
 		string.format(
-			's/%s/rgb(%d, %d, %d)',
+			's/%s/' .. require('config').options.rgb_pattern,
 			hex,
 			rgb_color[1],
 			rgb_color[2],
@@ -265,6 +265,10 @@ M.cycle = function()
 	elseif current_line:find('hsl') then
 		from_HSL_to_Hex(current_line)
 	end
+end
+
+M.setup = function(options)
+    require("config").__setup(options)
 end
 
 return M
