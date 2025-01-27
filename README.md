@@ -59,15 +59,35 @@ yourself. These commands are the following:
 
 ```lua
 {
-  hsl_pattern = "hsl(%d, %g%%, %g%%)",
-  hsla_pattern = "hsla(%d, %d%%, %d%%, %g)",
-  rgb_pattern = "rgb(%d, %d, %d)",
-  rgba_pattern = "rgba(%d, %d, %d, %g)",
+  hsl_pattern = "hsl([h]deg [s] [l])",
+  hsla_pattern = "hsl([h]deg [s] [l] / [a]%)",
+  rgb_pattern = "rgb([r] [g] [b])",
+  rgba_pattern = "rgb([r] [g] [b] / [a]%)",
 }
 ```
 
-You can update the patterns to use modern syntax without the comma separator, ie.
-`hsl_pattern = "hsl(%d %g%% %g%%)"`
+#### Patterns
+HSL/RGB colors can be expressed in many different ways, it's therefore possible
+to configure which one to use when generating/converting colors.
+
+This plugin aims to correctly convert HSL/RGB colors regardless of which syntax
+was used to write them. However one has to be chosen when generating a new
+color.
+
+See [hsl()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/hsl) and [rgb()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgb) for more information.
+
+The following rules apply to the color patterns:
+- Only known tokens will be replaced, unknown tokens and text oustide `[]` will be kept as is.
+  The following tokens are supported: `[h]`, `[s]`, `[l]`, `[r]`, `[g]`, `[b]`, `[a]`.
+- You can add the `%` suffix to any token to represent the value as a percentage.
+
+Example patterns (example values are included for clarity):
+- `hsl([h:180]deg [s:0] [l:50] / [a:0.5]%)` -> `hsl(180deg 0 50 / 50%)`
+- `hsl([h:180] [s:0]% [l:50]% / [a:0.5])` -> `hsl(180 0% 50% / 0.5)`
+- `hsl([h:180]deg, [s:0], [l:50])` -> `hsl(180deg, 0, 50)`
+- `rgb([r:255] [g:0] [b:0] / [a:0.5]%)` -> `rgb(255 0 0 / 50%)`
+- `rgb([r:255]% [g:0]% [b:0]% / [a:0.5])` -> `rgb(100% 0% 0% / 0.5)`
+- `rgb([r:255], [g:0], [b:0])` -> `rgb(255, 0, 0)`
 
 ## Acknowledgements
 
