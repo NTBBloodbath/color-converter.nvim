@@ -6,8 +6,12 @@ local M = {}
 -- @param r Red value
 -- @param g Green value
 -- @param b Blue value
+-- @param a Alpha value
 -- @return HEX color, e.g. '#1E1E1E'
-M.RGB_to_Hex = function(r, g, b)
+M.RGB_to_Hex = function(r, g, b, a)
+  if a then
+    return '#' .. string.format('%02X%02X%02X%02X', r, g, b, 255 * a)
+  end
 	return '#' .. string.format('%02X%02X%02X', r, g, b)
 end
 
@@ -49,8 +53,6 @@ M.Hex_to_RGB = function(color)
 			tonumber('0x' .. color:sub(5, 6)),
 		}
 	elseif color:len() == 8 then
-		-- NOTE: unused at the moment
-		-- #RRGGBBAA
 		return {
 			tonumber('0x' .. color:sub(1, 2)),
 			tonumber('0x' .. color:sub(3, 4)),
@@ -91,7 +93,6 @@ M.HSL_to_RGB = function(h, s, l, a)
 	h = h / 360
 	s = s / 100
 	l = l / 100
-	a = a and a / 100 or l
 	local r, g, b
 
 	-- achromatic
@@ -125,7 +126,6 @@ M.RGB_to_HSL = function(r, g, b, a)
 	r = r / 255
 	g = g / 255
 	b = b / 255
-	a = a and a or 0
 
 	local c_max = math.max(r, g, b)
 	local c_min = math.min(r, g, b)
@@ -171,9 +171,9 @@ M.Hex_to_HSL = function(color)
 	end
 end
 
-M.HSL_to_Hex = function(h, s, l)
-	local rgb = M.HSL_to_RGB(h, s, l)
-	return M.RGB_to_Hex(rgb[1], rgb[2], rgb[3])
+M.HSL_to_Hex = function(h, s, l, a)
+	local rgb = M.HSL_to_RGB(h, s, l, a)
+	return M.RGB_to_Hex(rgb[1], rgb[2], rgb[3], rgb[4])
 end
 
 return M
