@@ -59,7 +59,7 @@ yourself. These commands are the following:
 
 ```lua
 {
-  round_hsl = true, -- rounds satuation and light when generating HSL colors.
+  round_hsl = true, -- rounds saturation and light when generating HSL colors.
   hsl_pattern = "hsl([h]deg [s] [l])",
   hsla_pattern = "hsl([h]deg [s] [l] / [a]%)",
   rgb_pattern = "rgb([r] [g] [b])",
