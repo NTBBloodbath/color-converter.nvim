@@ -48,14 +48,19 @@ local function from_RGB_to_HSL(color_line)
 		pattern = require("config").options.hsla_pattern
 	end
 
-	-- Apply rounding to saturation and lightness values
+	-- Apply rounding to saturation and lightness values.
+    if require("config").options.round_hsl then
+        hsl_colors[2] = utils.round_float(hsl_colors[2], 0)
+        hsl_colors[3] = utils.round_float(hsl_colors[3], 0)
+    end
+
 	vim.cmd(string.format(
 		"s/%s/%s",
 		rgb.str:gsub("/", "\\/"),
 		utils.replace_tokens_in_pattern(pattern, {
-			h = utils.round_float(hsl_colors[1], 0),
-			s = utils.round_float(hsl_colors[2], 0),
-			l = utils.round_float(hsl_colors[3], 0),
+			h = hsl_colors[1],
+			s = hsl_colors[2],
+			l = hsl_colors[3],
 			a = hsl_colors[4],
 		})
 	))
@@ -75,6 +80,12 @@ local function from_Hex_to_HSL(color_line)
 	if hsl_color[4] then
 		pattern = require("config").options.hsla_pattern
 	end
+
+	-- Apply rounding to saturation and lightness values.
+    if require("config").options.round_hsl then
+        hsl_color[2] = utils.round_float(hsl_color[2], 0)
+        hsl_color[3] = utils.round_float(hsl_color[3], 0)
+    end
 
 	vim.cmd(string.format(
 		"s/%s/%s",
