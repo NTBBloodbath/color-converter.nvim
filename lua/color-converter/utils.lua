@@ -38,7 +38,8 @@ end
 --- @param color_string string -- the HSL color string.
 --- @return { str: string, h: number, s: number, l: number, a: number|nil }|nil
 M.extract_hsl = function(color_string)
-  local str, h, s, l, a = color_string:gmatch("(hsla?%(([^ /,]+)[, ]+([^ /,]+)[, ]+([^ /,]+)[ /,]*([^ /,]*)%))")()
+  local str, h, s, l, a =
+    color_string:gmatch("(hsla?%(([^ /,]+)[, ]+([^ /,]+)[, ]+([^ /,]+)[ /,]*([^ /,]*)%))")()
   if not str then
     return nil
   end
@@ -61,7 +62,8 @@ end
 --- @param color_string string -- the RGB color string.
 --- @return { str: string, r: number, g: number, b: number, a: number|nil }|nil
 M.extract_rgb = function(color_string)
-  local str, r, g, b, a = color_string:gmatch("(rgba?%(([^ /,]+)[, ]+([^ /,]+)[, ]+([^ /,]+)[ /,]*([^ /,]*)%))")()
+  local str, r, g, b, a =
+    color_string:gmatch("(rgba?%(([^ /,]+)[, ]+([^ /,]+)[, ]+([^ /,]+)[ /,]*([^ /,]*)%))")()
   if not str then
     return nil
   end
@@ -102,9 +104,9 @@ M.replace_tokens_in_pattern = function(pattern, tokens)
   for k, v in pairs(tokens) do
     -- Try to replace percentage placeholders first.
     if pattern:match("%[" .. k .. "%]%%") then
-      if k == 'a' then
+      if k == "a" then
         v = v * 100
-      elseif k == 'r' or k == 'g' or k == 'b' then
+      elseif k == "r" or k == "g" or k == "b" then
         v = v / 255 * 100
       end
       pattern = pattern:gsub("%[" .. k .. "%]%%", v .. "%%")
