@@ -42,17 +42,19 @@ containing the CSS color and trigger the command that you want.
 ### Commands
 
 `color-converter.nvim` respects your keyboard shortcuts, so it doesn't create
-any by default. Instead, expose commands so you can create keyboard shortcuts
-yourself. These commands are the following:
+any by default. Instead, expose functions so you can create keyboard shortcuts
+yourself. These functions are the following:
 
-- `<Plug>ColorConvertCycle`
+- `require('color-converter').cycle()`
   - Cycle between `HEX`, `RGB` and `HSL`.
-- `<Plug>ColorConvertHEX`
+- `require('color-converter').to_hex()`
   - Convert the current color to `HEX`.
-- `<Plug>ColorConvertRGB`
+- `require('color-converter').to_rgb()`
   - Convert the current color to `RGB`.
-- `<Plug>ColorConvertHSL`
+- `require('color-converter').to_hsl()`
   - Convert the current color to `HSL`.
+- `require('color-converter').pick()`
+  - Pick between all of the available formats.
 
 ### Configuration
   This is the default configuration:
@@ -106,7 +108,7 @@ Example patterns (example values are included for clarity):
 
 - [x] Support RGBA and HSLA
 - [ ] Proper support for HEX with Alpha field (`#RRGGBBAA`)
-- [ ] Add a command to select the conversion in a floating window
+- [x] Add a command to select the conversion in a floating window
 
 ## License
 
