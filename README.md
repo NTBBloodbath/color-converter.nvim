@@ -81,11 +81,16 @@ The following rules apply to the color patterns:
 - Only known tokens will be replaced, unknown tokens and text oustide `[]` will be kept as is.
   The following tokens are supported: `[h]`, `[s]`, `[l]`, `[r]`, `[g]`, `[b]`, `[a]`.
 - You can add the `%` suffix to any token to represent the value as a percentage.
+- You can add one of `deg`, `grad`, `rad`, or `turn` suffixes to the `[h]`
+  token to specify the format of the angle.
 
 Example patterns (example values are included for clarity):
 - `hsl([h:180]deg [s:0] [l:50] / [a:0.5]%)` -> `hsl(180deg 0 50 / 50%)`
 - `hsl([h:180] [s:0]% [l:50]% / [a:0.5])` -> `hsl(180 0% 50% / 0.5)`
 - `hsl([h:180]deg, [s:0], [l:50])` -> `hsl(180deg, 0, 50)`
+- `hsl([h:180]grad, [s:0], [l:50])` -> `hsl(200grad, 0, 50)`
+- `hsl([h:180]rad, [s:0], [l:50])` -> `hsl(3.14rad, 0, 50)`
+- `hsl([h:180]turn, [s:0], [l:50])` -> `hsl(0.5turn, 0, 50)`
 - `rgb([r:255] [g:0] [b:0] / [a:0.5]%)` -> `rgb(255 0 0 / 50%)`
 - `rgb([r:255]% [g:0]% [b:0]% / [a:0.5])` -> `rgb(100% 0% 0% / 0.5)`
 - `rgb([r:255], [g:0], [b:0])` -> `rgb(255, 0, 0)`
@@ -105,7 +110,7 @@ Example patterns (example values are included for clarity):
 ## Todo
 
 - [x] Support RGBA and HSLA
-- [ ] Proper support for HEX with Alpha field (`#RRGGBBAA`)
+- [x] Proper support for HEX with Alpha field (`#RRGGBBAA`)
 - [ ] Add a command to select the conversion in a floating window
 
 ## License
