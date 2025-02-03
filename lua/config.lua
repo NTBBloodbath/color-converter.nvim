@@ -5,6 +5,7 @@ local M = {}
 
 M.defaults = {
   round_hsl = true,
+  lowercase_hex = false,
   hsl_pattern = "hsl([h]deg [s] [l])",
   hsla_pattern = "hsl([h]deg [s] [l] / [a]%)",
   rgb_pattern = "rgb([r] [g] [b])",
@@ -13,6 +14,7 @@ M.defaults = {
 
 ---@class Config
 ---@field round_hsl boolean: whether to apply rounding when generating hsl colors.
+---@field lowercase_hex boolean: true if hex colors should be lowercased, false otherwise.
 ---@field hsl_pattern string: the hsl pattern used when generating colors.
 ---@field hsla_pattern string: the hsla pattern used when generating colors.
 ---@field rgb_pattern string: the rgb pattern used when generating colors.

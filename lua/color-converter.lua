@@ -1,5 +1,6 @@
 local converter = require("color-converter.converter")
 local utils = require("color-converter.utils")
+local config = require("config")
 local M = {}
 
 -- {{{ Some local DRY utilities
@@ -11,9 +12,9 @@ local function from_HSL_to_RGB(color_line, opts)
   end
 
   local rgb_colors = converter.HSL_to_RGB(hsl.h, hsl.s, hsl.l, hsl.a)
-  local pattern = require("config").options.rgb_pattern
+  local pattern = config.options.rgb_pattern
   if hsl.a then
-    pattern = require("config").options.rgba_pattern
+    pattern = config.options.rgba_pattern
   end
 
   local new_color = utils.replace_tokens_in_pattern(pattern, {
@@ -32,6 +33,9 @@ local function from_HSL_to_Hex(color_line, opts)
   local hsl = utils.extract_hsl(color_line)
   if hsl then
     local hex_color = converter.HSL_to_Hex(hsl.h, hsl.s, hsl.l, hsl.a)
+    if config.options.lowercase_hex then
+      hex_color = hex_color:lower()
+    end
     if not opts.dry_run then
       vim.cmd(string.format("s/%s/%s", hsl.str:gsub("/", "\\/"), hex_color))
     end
@@ -46,13 +50,13 @@ local function from_RGB_to_HSL(color_line, opts)
   end
 
   local hsl_colors = converter.RGB_to_HSL(rgb.r, rgb.g, rgb.b, rgb.a)
-  local pattern = require("config").options.hsl_pattern
+  local pattern = config.options.hsl_pattern
   if rgb.a then
-    pattern = require("config").options.hsla_pattern
+    pattern = config.options.hsla_pattern
   end
 
   -- Apply rounding to saturation and lightness values.
-  if require("config").options.round_hsl then
+  if config.options.round_hsl then
     hsl_colors[2] = utils.round_float(hsl_colors[2], 0)
     hsl_colors[3] = utils.round_float(hsl_colors[3], 0)
   end
@@ -73,6 +77,9 @@ local function from_RGB_to_Hex(color_line, opts)
   local rgb = utils.extract_rgb(color_line)
   if rgb then
     local hex_color = converter.RGB_to_Hex(rgb.r, rgb.g, rgb.b, rgb.a)
+    if config.options.lowercase_hex then
+      hex_color = hex_color:lower()
+    end
     if not opts.dry_run then
       vim.cmd(string.format("s/%s/%s", rgb.str:gsub("/", "\\/"), hex_color))
     end
@@ -83,13 +90,13 @@ end
 local function from_Hex_to_HSL(color_line, opts)
   local hex = color_line:gmatch("(#%w+);?")()
   local hsl_color = converter.Hex_to_HSL(hex)
-  local pattern = require("config").options.hsl_pattern
+  local pattern = config.options.hsl_pattern
   if hsl_color[4] then
-    pattern = require("config").options.hsla_pattern
+    pattern = config.options.hsla_pattern
   end
 
   -- Apply rounding to saturation and lightness values.
-  if require("config").options.round_hsl then
+  if config.options.round_hsl then
     hsl_color[2] = utils.round_float(hsl_color[2], 0)
     hsl_color[3] = utils.round_float(hsl_color[3], 0)
   end
@@ -109,9 +116,9 @@ end
 local function from_Hex_to_RGB(color_line, opts)
   local hex = color_line:gmatch("(#%w+);?")()
   local rgb_color = converter.Hex_to_RGB(hex)
-  local pattern = require("config").options.rgb_pattern
+  local pattern = config.options.rgb_pattern
   if rgb_color[4] then
-    pattern = require("config").options.rgba_pattern
+    pattern = config.options.rgba_pattern
   end
 
   local new_color = utils.replace_tokens_in_pattern(pattern, {
