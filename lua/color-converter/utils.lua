@@ -113,7 +113,7 @@ end
 --- @param tokens table -- a table of tokens keyed by token name.
 --- @return string -- the pattern with tokens replaced.
 M.replace_tokens_in_pattern = function(pattern, tokens)
-  pattern = pattern:gsub("%%", "%%"):gsub("/", "\\/")
+  pattern = pattern:gsub("%%", "%%")
   for k, v in pairs(tokens) do
     -- Try to replace percentage placeholders first.
     if pattern:match("%[" .. k .. "%]%%") then
