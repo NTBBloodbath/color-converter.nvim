@@ -46,6 +46,19 @@ M.extract_hsl = function(color_string)
 
   local result = { str = str }
   result.h = tonumber(h:gsub("deg", ""):gsub("none", 0), 10)
+  -- Convert gradians, radians, and turns to degrees.
+  if h:match("grad") then
+    -- Represents an angle in gradians. One full circle is 400grad.
+    result.h = tonumber(h:gsub("grad", ""), 10) / 400 * 360
+  elseif h:match("rad") then
+    -- Represents an angle in radians. One full circle is 2π radians which
+    -- approximates to 6.2832rad. 1rad is 180/π degrees.
+    result.h = tonumber(h:gsub("rad", ""), 10) / (2 * math.pi) * 360
+  elseif h:match("turn") then
+    -- Represents an angle in a number of turns. One full circle is 1turn.
+    result.h = tonumber(h:gsub("turn", ""), 10) * 360
+  end
+
   result.s = tonumber(s:gsub("%%", ""):gsub("none", 0), 10)
   result.l = tonumber(l:gsub("%%", ""):gsub("none", 0), 10)
   result.a = alpha_value_to_decimal(a)
@@ -111,6 +124,19 @@ M.replace_tokens_in_pattern = function(pattern, tokens)
       end
       pattern = pattern:gsub("%[" .. k .. "%]%%", v .. "%%")
     else
+      if pattern:match("%[" .. k .. "%]grad") then
+        v = v / 360 * 400
+      elseif pattern:match("%[" .. k .. "%]rad") then
+        v = v / 360 * (2 * math.pi)
+      elseif pattern:match("%[" .. k .. "%]turn") then
+        v = v / 360
+      end
+
+      if k == "h" and require("config").options.round_hsl then
+        -- Some formats such as turn would be useless without at least two decimals.
+        v = M.round_float(v, 2);
+      end
+
       pattern = pattern:gsub("%[" .. k .. "%]", v)
     end
   end
